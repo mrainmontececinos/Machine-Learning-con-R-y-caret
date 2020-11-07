@@ -1,4 +1,4 @@
-data <- read.delim("F:/sergio/taller 3/data.txt", header=T,encoding = 'UTF-8')
+data <- read.delim("F:/data.txt", header=T,encoding = 'UTF-8')
 
 
 data$Target=factor(data$Target, levels = c(0,1),
@@ -22,7 +22,7 @@ data$Target=as.factor(data$Target)
 data$Ciudad=as.factor(data$Ciudad)
 data$Estrato=as.factor(data$Estrato)
 data$Canal=as.factor(data$Canal)
-data$Campaña=as.factor(data$Campaña)
+data$CampaÃ±a=as.factor(data$CampaÃ±a)
 data$Nivel_Academico=as.factor(data$Nivel_Academico)
 data$Motivo_Retiro=as.factor(data$Motivo_Retiro)
 data$Franquicia=as.factor(data$Franquicia)
@@ -35,7 +35,7 @@ data$Estado_civil=as.factor(data$Estado_civil)
 data$Cta._Ahorro_.Ent.=as.factor(data$Cta._Ahorro_.Ent.)
 
 
-# Número de datos ausentes por variable
+# NÃºmero de datos ausentes por variable
 map_dbl(data, .f = function(x){sum(is.na(x))})
 
 
@@ -92,7 +92,7 @@ data %>% group_by(Target) %>%
 
 
 
-# Distribución de variables cualitativas
+# DistribuciÃ³n de variables cualitativas
 
 ggplot(data = data, aes(x =Ciudad , y = ..count.., fill = Target)) + 
   geom_bar() + scale_fill_manual(values = c("gray50", "orangered2")) +
@@ -148,10 +148,10 @@ glimpse(data)
 
 datos_cualitativos <-  data %>% 
   select(-Tipo_documento, -ID, -Fecha_de_Corte, 
-         -Fecha_nacimiento, -Fecha_activación,-Corte_AAAAMM,
+         -Fecha_nacimiento, -Fecha_activaciÃ³n,-Corte_AAAAMM,
          -Motivo_Retiro,-Promedio_Uso._12_meses_atras,-Cupo,
          -Ingresos_smlv,-Ingresos_Cliente,-Promedio_Uso._historico,
-         -Edad,-Máximo_Plazo_Diferido,-Score_Central,-endeudamiento_rotativo_Sector,
+         -Edad,-MÃ¡ximo_Plazo_Diferido,-Score_Central,-endeudamiento_rotativo_Sector,
          -Corte_AAAAMM)
 
 
@@ -193,7 +193,7 @@ plot_grupo <- function(grupo, df, threshold_line = 0.13){
   p <- ggplot(data = df, aes(x = 1, y = ..count.., fill = Target)) +
     geom_bar() + 
   scale_fill_manual(values = c("gray50", "orangered2")) + 
-  # Se añade una línea horizontal en el nivel basal 
+  # Se aÃ±ade una lÃ­nea horizontal en el nivel basal 
     geom_hline(yintercept = nrow(df) * threshold_line,
                linetype = "dashed") + labs(title = grupo) +
     theme_bw() + 
@@ -226,7 +226,7 @@ ggarrange(plotlist = plots, common.legend = TRUE)
 library(randomForest) 
 
 datos_rf <- data %>% select(-Tipo_documento, -ID, -Fecha_de_Corte, 
- -Fecha_nacimiento, -Fecha_activación,-Corte_AAAAMM,-Motivo_Retiro)
+ -Fecha_nacimiento, -Fecha_activaciÃ³n,-Corte_AAAAMM,-Motivo_Retiro)
 
 
 
@@ -245,13 +245,13 @@ p1 <- ggplot(data = importancia,
              aes(x = reorder(variable, MeanDecreaseAccuracy),
                  y = MeanDecreaseAccuracy, 
                  fill = MeanDecreaseAccuracy)) +
-  labs(x = "variable", title = "Reducción de Accuracy") +
+  labs(x = "variable", title = "ReducciÃ³n de Accuracy") +
   geom_col() + coord_flip() + theme_bw() +theme(legend.position = "bottom") 
 
 p2 <- ggplot(data = importancia,
              aes(x = reorder(variable, MeanDecreaseGini), 
                  y = MeanDecreaseGini, fill = MeanDecreaseGini)) + 
-  labs(x = "variable", title = "Reducción de pureza (Gini)") +
+  labs(x = "variable", title = "ReducciÃ³n de pureza (Gini)") +
   geom_col() + coord_flip() + theme_bw() + 
   theme(legend.position = "bottom") 
 library("ggpubr")
@@ -261,7 +261,7 @@ ggarrange(p1, p2)
 
 
 set.seed(123)
-# Se crean los índices de las observaciones de entrenamiento 
+# Se crean los Ã­ndices de las observaciones de entrenamiento 
 
 train <- createDataPartition(y = data$Target, 
                              p = 0.8, list = FALSE, times = 1)
@@ -318,8 +318,9 @@ glimpse(datos_train_prep)
 
 #K-Nearest Neighbor (kNN)
 
-# k: número de observaciones vecinas empleadas.
+# k: nÃºmero de observaciones vecinas empleadas.
 
+set.seed(342)
 
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
@@ -345,6 +346,7 @@ print(modelo_knn$finalModel)
 
 
 #predicion
+set.seed(342)
 
 predicciones_knn <- predict(modelo_knn,
                            newdata = datos_test_prep, 
@@ -365,14 +367,15 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
 
 # usekernel: TRUE para emplear un kernel que estime la densidad o 
-# FALSE para asumir una distribución de densidad gaussiana. 
+# FALSE para asumir una distribuciÃ³n de densidad gaussiana. 
 
-# fL: factor de corrección de Laplace, 0 para no aplicar ninguna 
-# corrección. 
+# fL: factor de correcciÃ³n de Laplace, 0 para no aplicar ninguna 
+# correcciÃ³n. 
 
-# adjust: parámetro pasado a la función density si usekernel = TRUE.
+# adjust: parÃ¡metro pasado a la funciÃ³n density si usekernel = TRUE.
 
 
+set.seed(342)
 
 
 control_train <- trainControl(method = "repeatedcv",
@@ -395,11 +398,10 @@ modelo_nb
 
 
 
-print(modelo_nb$finalModel)
-
 
 
 #predicion
+set.seed(342)
 
 predicciones_nb<- predict(modelo_nb,
                             newdata = datos_test_prep, 
@@ -421,9 +423,10 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
 
 
-# Regresión logística
+# RegresiÃ³n logÃ­stica
 
 
+set.seed(342)
 
 
 control_train <- trainControl(method = "repeatedcv",
@@ -446,6 +449,7 @@ summary(modelo_logistic$finalModel)
 
 
 #predicion
+set.seed(342)
 
 predicciones_logistic<- predict(modelo_logistic,
                           newdata = datos_test_prep, 
@@ -471,7 +475,7 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
 
 
-# Árbol de clasificación simple
+# Ãrbol de clasificaciÃ³n simple
 
 set.seed(342)
 control_train <- trainControl(method = "repeatedcv",
@@ -480,6 +484,7 @@ control_train <- trainControl(method = "repeatedcv",
 
 
 
+set.seed(342)
 
 modelo_C50Tree <- train(Target ~ ., data = datos_train_prep,
                         method = "C5.0Tree",
@@ -517,11 +522,13 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 # RandomForest
 
 
-# mtry: número predictores seleccionados aleatoriamente en cada árbol. 
-# min.node.size: tamaño mínimo que tiene que tener un nodo para poder 
+# mtry: nÃºmero predictores seleccionados aleatoriamente en cada Ã¡rbol. 
+# min.node.size: tamaÃ±o mÃ­nimo que tiene que tener un nodo para poder 
 # ser dividido. 
 
-#splitrule: criterio de división.
+#splitrule: criterio de divisiÃ³n.
+
+set.seed(342)
 
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
@@ -575,40 +582,43 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 # Gradient Boosting
 
 
-#n.trees: número de iteraciones del algoritmo de boosting, es decir, 
-# número de modelos que forman el ensemble. Cuanto mayor es este valor, 
-# más se reduce el error de entrenamiento, pudiendo llegar generarse 
+#n.trees: nÃºmero de iteraciones del algoritmo de boosting, es decir, 
+# nÃºmero de modelos que forman el ensemble. Cuanto mayor es este valor, 
+# mÃ¡s se reduce el error de entrenamiento, pudiendo llegar generarse 
 #overfitting.
 
 
-# interaction.depth: complejidad de los árboles empleados como weak 
-# learner, en concreto, el número total de divisiones que tiene el árbol.
-#Emplear árboles con ente 1 y 6 nodos suele dar buenos resultados.
+# interaction.depth: complejidad de los Ã¡rboles empleados como weak 
+# learner, en concreto, el nÃºmero total de divisiones que tiene el Ã¡rbol.
+#Emplear Ã¡rboles con ente 1 y 6 nodos suele dar buenos resultados.
 
 
-#shrinkage: este parámetro, también conocido como learning rate, 
+#shrinkage: este parÃ¡metro, tambiÃ©n conocido como learning rate, 
 # controla la influencia que tiene cada modelo sobre el conjunto 
 #del ensemble.
 
 
-# n.minobsinnode: número mínimo de observaciones que debe tener un 
+# n.minobsinnode: nÃºmero mÃ­nimo de observaciones que debe tener un 
 # nodo para poder ser dividido. Al igual que interaction.depth, 
-# permite controlar la complejidad de los weak learners basados en árboles.
+# permite controlar la complejidad de los weak learners basados en Ã¡rboles.
 
 
 
-# Hiperparámetros 
+# HiperparÃ¡metros 
+
+
+
+set.seed(342)
+
+control_train <- trainControl(method = "repeatedcv",
+                              number = 10, 
+                              repeats = 5)
 
 hiperparametros <- expand.grid(interaction.depth = 2, 
                                n.trees = 200, 
                                shrinkage = 0.1, 
                                n.minobsinnode = 15)
 
-
-
-control_train <- trainControl(method = "repeatedcv",
-                              number = 10, 
-                              repeats = 5)
 
 set.seed(342)
 
@@ -618,7 +628,7 @@ modelo_boost <- train(Target ~ .,
                       tuneGrid = hiperparametros, 
                       metric = "Accuracy",
                       trControl = control_train,
-                      # Número de árboles ajustados distribution = "adaboost",
+                      # NÃºmero de Ã¡rboles ajustados distribution = "adaboost",
                       verbose = FALSE) 
 modelo_boost
 
@@ -657,13 +667,15 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
 
 # sigma: coeficiente del kernel radial. 
-#C: penalización por violaciones del margen del hiperplano.
+#C: penalizaciÃ³n por violaciones del margen del hiperplano.
+
+set.seed(342)
 
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
                               repeats = 5)
 
-# Hiperparámetros 
+# HiperparÃ¡metros 
 
 hiperparametros <- expand.grid(sigma =  0.01,
                                C = 100)
@@ -707,12 +719,13 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 # Redes neuronales (NNET)
 
 
-#size: número de neuronas en la capa oculta. 
-#decay: controla la regularización durante el entrenamiento de la red.
+#size: nÃºmero de neuronas en la capa oculta. 
+#decay: controla la regularizaciÃ³n durante el entrenamiento de la red.
 
 
-# Hiperparámetros 
+# HiperparÃ¡metros 
 
+set.seed(342)
 
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
@@ -731,11 +744,11 @@ modelo_nnet <- train(Target~ ., data = datos_train_prep,
                      tuneGrid = hiperparametros,
                      metric = "Accuracy",
                      trControl = control_train,
-                     # Rango de inicialización de los pesos 
+                     # Rango de inicializaciÃ³n de los pesos 
                      rang = c(-0.7, 0.7),
-                     # Se aumenta el número máximo de pesos 
+                     # Se aumenta el nÃºmero mÃ¡ximo de pesos 
                      MaxNWts = 2000, 
-                     # Para que no se muestre cada iteración por pantalla 
+                     # Para que no se muestre cada iteraciÃ³n por pantalla 
                      trace = FALSE) 
 
 modelo_nnet
@@ -769,7 +782,7 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
 
 
-## Comparación de modelos
+## ComparaciÃ³n de modelos
 
 
 modelos <- list(KNN = modelo_knn,
@@ -812,7 +825,7 @@ metricas_resamples %>%
   geom_text(color = "white", size = 2.5) + 
   scale_y_continuous(limits = c(0, 1)) +
   # Accuracy basal geom_hline(yintercept = 0.62, linetype = "dashed") + 
-  labs(title = "Validación: Accuracy medio repeated-CV",
+  labs(title = "ValidaciÃ³n: Accuracy medio repeated-CV",
        subtitle = "Modelos ordenados por media", x = "Modelo") +
   coord_flip() + theme_bw()
 
