@@ -103,7 +103,7 @@ data %>% group_by(Target) %>%
 ```
 
 
-## 2.3 Distribución de variables cualitativas
+##  Distribución de variables cualitativas
 
 
 ```{r}
@@ -246,6 +246,7 @@ ggarrange(plotlist = plots, common.legend = TRUE)
   
  
   ### 2.4.2 Random forest 
+  
   Otra estrategia ampliamente extendida para estudiar la importancia de variables es el empleo de Random Forest. El problema de aplicarlo a este ejemplo es que no acepta 
   valores ausentes, tema que todavía no se ha tratado (visto más adelante).
   
@@ -443,7 +444,7 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
   
 
 ```{r}
-
+set.seed(342) 
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
                               repeats = 5) 
@@ -487,7 +488,7 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
   
   
 ```{r}
-
+set.seed(342) 
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
                               repeats = 5)
@@ -705,10 +706,11 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
   ## 5.9 Redes neuronales (NNET) 
   
-
+```{r}
 # Hiperparámetros 
 
 set.seed(342)
+
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
                               repeats = 5)
@@ -762,6 +764,7 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
 
 ```{r}
+
 modelos <- list(KNN = modelo_knn,
                 NB = modelo_nb, 
                 logistic = modelo_logistic, 
