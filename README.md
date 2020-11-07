@@ -1,6 +1,5 @@
 # Machine Learning con R y caret
 
-Tabla de contenidos
 # 1. Introducción
 Durante los últimos años, el interés y la aplicación de machine learning ha experimentado tal expansión, que se ha convertido en una disciplina aplicada en prácticamente todos los ámbitos de investigación académica e industrial. El creciente número de personas dedicadas a esta disciplina ha dado como resultado todo un repertorio de herramientas con las que, perfiles con especialización media, consiguen acceder a métodos predictivos potentes. El lenguaje de programación R es un ejemplo de ello.
 
@@ -27,6 +26,11 @@ Antes de entrenar un modelo predictivo, o incluso antes de realizar cualquier c�
   valores ausentes, tema que todavía no se ha tratado (visto más adelante).
   
 # 3 División de los datos en entrenamiento y test 
+
+  Evaluar la capacidad predictiva de un modelo consiste en comprobar cómo de próximas son sus predicciones a los verdaderos valores de la variable respuesta. Para poder      
+  cuantificar de forma correcta este error, se necesita disponer de un conjunto de observaciones, de las que se conozca la variable respuesta, pero que el modelo no haya 
+  “visto”, es decir, que no hayan participado en su ajuste. C
+
 # 4 Preprocesado de los datos 
   ## Variables con varianza próxima a cero
   ## Estandarización y escalado 
