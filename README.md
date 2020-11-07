@@ -27,9 +27,8 @@ Antes de entrenar un modelo predictivo, o incluso antes de realizar cualquier c�
   
 # 3 División de los datos en entrenamiento y test 
 
-  Evaluar la capacidad predictiva de un modelo consiste en comprobar cómo de próximas son sus predicciones a los verdaderos valores de la variable respuesta. Para poder      
-  cuantificar de forma correcta este error, se necesita disponer de un conjunto de observaciones, de las que se conozca la variable respuesta, pero que el modelo no haya 
-  “visto”, es decir, que no hayan participado en su ajuste. C
+  Evaluar la capacidad predictiva de un modelo consiste en comprobar cómo de próximas son sus predicciones a los verdaderos valores de la variable respuesta. 
+  Para poder cuantificar de forma correcta este error, se necesita disponer de un conjunto de observaciones, de las que se conozca la variable respuesta, pero que el modelo no   haya  “visto”, es decir, que no hayan participado en su ajuste. C
 
 # 4 Preprocesado de los datos 
   El preprocesado de datos engloba aquellas transformaciones de los datos hechas con la finalidad de que puedan ser aceptados por el algoritmo de machine learning o que mejoren   sus resultados. Todo preprocesado de datos debe aprenderse de las observaciones de entrenamiento y luego aplicarse al conjunto de entrenamiento y al de test.
