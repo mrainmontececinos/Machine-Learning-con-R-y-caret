@@ -6,7 +6,7 @@
 
 
 ```{r}
-data <- read.delim("F:/sergio/taller 3/data.txt", header=T,encoding = 'UTF-8')
+data <- read.delim("F:/mrain/data.txt", header=T,encoding = 'UTF-8')
 
 
 data$Target=factor(data$Target, levels = c(0,1),
