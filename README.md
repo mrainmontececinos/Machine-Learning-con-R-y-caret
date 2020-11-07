@@ -156,13 +156,13 @@ prop.table(table(data$Nivel_Academico, data$Target), margin = 1) %>%
 ```
 
   
-  ## Importancia de las variables 
+  ## 2.4 Importancia de las variables 
   La representación gráfica de la distribución de las variables en función de si los pasajeros sobrevivieron o no, ayuda a tener una idea de qué variables pueden ser buenos 
   predictores para el modelo y cuales no aportan información o la que aportan es redundante.
   
   
   
-  ## Contraste de proporciones 
+  ### 2.4.1 Contraste de proporciones 
   Para la identificación de potenciales predictores cualitativos, es interesante encontrar las variables y niveles de las mismas que muestran una proporción de Target se aleja 
   de lo esperado por el nivel basal, en este caso el 13%
   
@@ -245,7 +245,7 @@ ggarrange(plotlist = plots, common.legend = TRUE)
 ```
   
  
-  ## Random forest 
+  ### 2.4.2 Random forest 
   Otra estrategia ampliamente extendida para estudiar la importancia de variables es el empleo de Random Forest. El problema de aplicarlo a este ejemplo es que no acepta 
   valores ausentes, tema que todavía no se ha tratado (visto más adelante).
   
