@@ -4,7 +4,7 @@
 Durante los últimos años, el interés y la aplicación de machine learning ha experimentado tal expansión, que se ha convertido en una disciplina aplicada en prácticamente todos los ámbitos de investigación académica e industrial. El creciente número de personas dedicadas a esta disciplina ha dado como resultado todo un repertorio de herramientas con las que, perfiles con especialización media, consiguen acceder a métodos predictivos potentes. El lenguaje de programación R es un ejemplo de ello.
 
 ```{r}
-data <- read.delim("F:/sergio/taller 3/data.txt", header=T,encoding = 'UTF-8')
+data <- read.delim("F:/mrain/data.txt", header=T,encoding = 'UTF-8')
 
 
 data$Target=factor(data$Target, levels = c(0,1),
