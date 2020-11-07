@@ -1,21 +1,28 @@
+
+
+
+
+# An谩lisis exploratorio de los datos
+
+
+```{r}
 data <- read.delim("F:/sergio/taller 3/data.txt", header=T,encoding = 'UTF-8')
 
-set.seed(345)
-data2= sample(1:nrow(data),size=2000,replace=FALSE)
 
-data<- data[data2, ]
+data$Target=factor(data$Target, levels = c(0,1),
+                   labels = c("No","Si"))
+
+set.seed(345)
 
 
 library(caret)
 library(tidyverse)
-glimpse(data)
-
 
 data$Target=as.factor(data$Target)
 data$Ciudad=as.factor(data$Ciudad)
 data$Estrato=as.factor(data$Estrato)
 data$Canal=as.factor(data$Canal)
-data$Campa馻=as.factor(data$Campa馻)
+data$Campa帽a=as.factor(data$Campa帽a)
 data$Nivel_Academico=as.factor(data$Nivel_Academico)
 data$Motivo_Retiro=as.factor(data$Motivo_Retiro)
 data$Franquicia=as.factor(data$Franquicia)
@@ -26,44 +33,240 @@ data$Contrato=as.factor(data$Contrato)
 data$Act._Economica=as.factor(data$Act._Economica)
 data$Estado_civil=as.factor(data$Estado_civil)
 data$Cta._Ahorro_.Ent.=as.factor(data$Cta._Ahorro_.Ent.)
+```
 
 
-# N鷐ero de datos ausentes por variable
-map_dbl(data, .f = function(x){sum(is.na(x))})
+### Distribuci贸n de variables respuesta
 
-
-
-
-
+```{r}
 ggplot(data = data, aes(x = Target, y = ..count.., fill = Target)) +
   geom_bar() + scale_fill_manual(values = c("gray50", "orangered2")) +
-  labs(title = "Supervivencia") + theme_bw() +
+  labs(title = "Target") + theme_bw() +
+  theme(legend.position = "bottom")
+prop.table(table(data$Target)) %>% round(digits = 2)
+
+```
+
+
+```{r}
+n_observaciones <- nrow(data) 
+predicciones <- rep(x = "No", n_observaciones)
+mean(predicciones == data$Target) * 100
+
+```
+
+
+### Distribuci贸n de variables continuas
+
+
+
+```{r}
+library(ggpubr)
+
+p1 <- ggplot(data = data, aes(x = Edad, fill = Target)) + 
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c("gray50", "orangered2")) +
+  geom_rug(aes(color = Target), alpha = 0.5) + 
+  scale_color_manual(values = c("gray50", "orangered2")) +
+  theme_bw() 
+
+p2 <- ggplot(data = data, 
+             aes(x = Target, y = Edad, color = Target)) + 
+  geom_boxplot() +
+  geom_jitter(alpha = 0.3, width = 0.15) +
+  scale_color_manual(values = c("gray50", "orangered2")) +
+  theme_bw()
+
+
+final_plot <- ggarrange(p1, p2, legend = "top")
+final_plot <- annotate_figure(final_plot, 
+                              top = text_grob("Edad", size = 15)) 
+final_plot
+```
+
+
+
+```{r}
+data %>% group_by(Target) %>%
+  summarise(count=n(),
+            media = mean(Edad),
+            mediana = median(Edad),
+            min = min(Edad), 
+            max = max(Edad))
+```
+
+
+### Distribuci贸n de variables cualitativas
+
+
+```{r}
+ggplot(data = data, aes(x =Ciudad , y = ..count.., fill = Target)) + 
+  geom_bar() + scale_fill_manual(values = c("gray50", "orangered2")) +
+  labs(title = "Ciudad") + theme_bw() +
   theme(legend.position = "bottom")
 
 
-prop.table(table(data$Target)) %>% round(digits = 2)
+prop.table(table(data$Ciudad, data$Target), margin = 1) %>% 
+  round(digits = 2)
+```
+
+
+```{r}
+ggplot(data = data, aes(x =Estado_civil , y = ..count.., fill = Target)) + 
+  geom_bar() + scale_fill_manual(values = c("gray50", "orangered2")) +
+  labs(title = "Ciudad") + theme_bw() +
+  theme(legend.position = "bottom")
+
+
+prop.table(table(data$Estado_civil, data$Target), margin = 1) %>% 
+  round(digits = 2)
+```
+
+
+```{r}
+ggplot(data = data, aes(x =Contrato , y = ..count.., fill = Target)) + 
+  geom_bar() + scale_fill_manual(values = c("gray50", "orangered2")) +
+  labs(title = "Contrato") + theme_bw() +
+  theme(legend.position = "bottom")
+
+
+prop.table(table(data$Contrato, data$Target), margin = 1) %>% 
+  round(digits = 2)
+```
+
+
+```{r}
+ggplot(data = data, aes(x =Nivel_Academico , y = ..count.., fill = Target)) + 
+  geom_bar() + scale_fill_manual(values = c("gray50", "orangered2")) +
+  labs(title = "Nivel Academico") + theme_bw() +
+  theme(legend.position = "bottom")
+
+
+prop.table(table(data$Nivel_Academico, data$Target), margin = 1) %>% 
+  round(digits = 2)
+
+
+```
+
+## Importancia de las variables
 
 
 
 
-# Porcentaje de aciertos si se predice para todas las observaciones
-
-n_observaciones <- nrow(data) 
-predicciones <- rep(x = "0", n_observaciones)
-mean(predicciones == data$Target) * 100
+### Correlaci贸n entre variables continuas
 
 
 
+```{r}
+cor.test(x = data$Edad, y = data$Ingresos_Cliente, method = "pearson")
+```
+
+```{r}
+ggplot(data = data, aes(x = Edad, y = log(Ingresos_Cliente))) + geom_point(color = "gray30") + geom_smooth(color = "firebrick") + theme_bw()
+```
 
 
 
-# Importancia de las variables
+### Contraste de proporciones
 
 
+Para la identificaci贸n de potenciales predictores cualitativos, es interesante encontrar las variables y niveles de las mismas que muestran una proporci贸n de supervivientes alejada de lo esperado por el nivel basal, en este caso el 13%. Este porcentaje se corresponde con la proporci贸n de Target respecto al total de lso clientes, es decir, el valor esperado si no existiese relaci贸n entre la variable y la supervivencia. Estas diferencias no siempre son f谩ciles de apreciar en una gr谩fica, sobre todo, cuando el n煤mero de observaciones es distinto en cada grupo.
+
+
+Para facilitar este tipo de an谩lisis, resulta 煤til crear variables dummy con todos los niveles de las variables cualitativas (proceso conocido como binarizaci贸n o one hot encoding) y aplicar un test de contraste de proporciones.
+
+
+
+
+
+```{r}
+datos_cualitativos <-  data %>% 
+  select(-Tipo_documento, -ID, -Fecha_de_Corte, 
+         -Fecha_nacimiento, -Fecha_activaci贸n,-Corte_AAAAMM,
+         -Motivo_Retiro,-Promedio_Uso._12_meses_atras,-Cupo,
+         -Ingresos_smlv,-Ingresos_Cliente,-Promedio_Uso._historico,
+         -Edad,-M谩ximo_Plazo_Diferido,-Score_Central,-endeudamiento_rotativo_Sector,
+         -Corte_AAAAMM)
+
+
+datos_cualitativos_tidy <- datos_cualitativos %>% 
+  gather(key = "variable", value = "grupo",-Target)
+
+
+datos_cualitativos_tidy <- datos_cualitativos_tidy %>% 
+  mutate(variable_grupo = paste(variable, grupo, sep="_"))
+
+
+
+test_proporcion <- function(df){ 
+  n_si <- sum(df$Target == "Si")
+  n_no <- sum(df$Target == "No") 
+  n_total <- n_si + n_no
+  test <- prop.test(x = n_si, n = n_total, p = 0.13) 
+  prop_si <- n_si / n_total 
+  return(data.frame(p_value = test$p.value, prop_si)) 
+  }
+
+
+analisis_prop <- datos_cualitativos_tidy %>% 
+  group_by(variable_grupo) %>% nest() %>% 
+  arrange(variable_grupo) %>%
+  mutate(prop_test = map(.x = data, .f = test_proporcion)) %>% 
+  unnest(prop_test) %>% arrange(p_value) %>% 
+  select(variable_grupo,p_value, prop_si) 
+
+analisis_prop
+
+
+top6_grupos <- analisis_prop %>% pull(variable_grupo) %>% 
+  head(6)
+```
+
+
+ Representaci贸n gr谩fica de la distribuci贸n de los 6 grupos con menor p-value
+
+```{r}
+
+plot_grupo <- function(grupo, df, threshold_line = 0.13){
+  p <- ggplot(data = df, aes(x = 1, y = ..count.., fill = Target)) +
+    geom_bar() + 
+  scale_fill_manual(values = c("gray50", "orangered2")) + 
+  # Se a帽ade una l铆nea horizontal en el nivel basal 
+    geom_hline(yintercept = nrow(df) * threshold_line,
+               linetype = "dashed") + labs(title = grupo) +
+    theme_bw() + 
+    theme(legend.position = "bottom",
+          axis.text.x = element_blank(),
+          axis.title.x = element_blank(), 
+          axis.ticks.x = element_blank()) 
+  return(p) }
+
+
+
+
+datos_graficos <- datos_cualitativos_tidy %>%
+  filter(variable_grupo %in% top6_grupos) %>% 
+  group_by(variable_grupo) %>% nest() %>% 
+  arrange(variable_grupo)
+
+plots <- map2(datos_graficos$variable_grupo,
+              .y = datos_graficos$data, .f = plot_grupo)
+
+ggarrange(plotlist = plots, common.legend = TRUE)
+
+
+
+```
+
+
+### Random forest
+
+
+```{r}
 library(randomForest) 
 
 datos_rf <- data %>% select(-Tipo_documento, -ID, -Fecha_de_Corte, 
-                            -Fecha_nacimiento, -Fecha_activaci髇,-Corte_AAAAMM,-Motivo_Retiro)
+ -Fecha_nacimiento, -Fecha_activaci贸n,-Corte_AAAAMM,-Motivo_Retiro)
 
 
 
@@ -82,64 +285,100 @@ p1 <- ggplot(data = importancia,
              aes(x = reorder(variable, MeanDecreaseAccuracy),
                  y = MeanDecreaseAccuracy, 
                  fill = MeanDecreaseAccuracy)) +
-  labs(x = "variable", title = "Reducci髇 de Accuracy") +
+  labs(x = "variable", title = "Reducci贸n de Accuracy") +
   geom_col() + coord_flip() + theme_bw() +theme(legend.position = "bottom") 
 
 p2 <- ggplot(data = importancia,
              aes(x = reorder(variable, MeanDecreaseGini), 
                  y = MeanDecreaseGini, fill = MeanDecreaseGini)) + 
-  labs(x = "variable", title = "Reducci髇 de pureza (Gini)") +
+  labs(x = "variable", title = "Reducci贸n de pureza (Gini)") +
   geom_col() + coord_flip() + theme_bw() + 
   theme(legend.position = "bottom") 
 library("ggpubr")
 ggarrange(p1, p2)
 
+```
 
 
 
-set.seed(123)
-# Se crean los 韓dices de las observaciones de entrenamiento 
 
+
+
+# Divisi贸n de los datos en entrenamiento y test
+
+
+```{r}
+set.seed(342)
 train <- createDataPartition(y = data$Target, 
                              p = 0.8, list = FALSE, times = 1)
-
 datos_train <- data[train, ] 
 datos_test <- data[-train, ]
+```
 
-
+```{r}
 prop.table(table(datos_train$Target))
-
 prop.table(table(datos_test$Target))
+```
 
 
+
+### Preprocesado de los datos
+
+
+```{r}
 library(recipes)
 
 
 objeto_recipe <- recipe(formula = Target ~Ciudad+Estado_civil+Edad+
-                          Contrato+Nivel_Academico, data = datos_train) 
-
+                        Contrato+Nivel_Academico, data = datos_train) 
 objeto_recipe
 
 
+```
+
+
+### Variables con varianza pr贸xima a cero
+
+
+
+```{r}
+data %>% select(Ciudad,Estado_civil,Edad,Contrato,Nivel_Academico) %>% 
+  nearZeroVar(saveMetrics = TRUE)
+```
+
+### Estandarizaci贸n y escalado
+
+```{r}
 objeto_recipe <- objeto_recipe %>% step_center(all_numeric()) 
 objeto_recipe <- objeto_recipe %>% step_scale(all_numeric())
 
+```
 
+### Binarizaci贸n de variables cualitativas
+
+
+
+```{r}
 
 objeto_recipe <- objeto_recipe %>% step_dummy(all_nominal(), -all_outcomes())
 
+```
 
+
+```{r}
 trained_recipe <- prep(objeto_recipe, training = datos_train) 
 trained_recipe
+```
 
 
+Se aplican las transformaciones al conjunto de entrenamiento y de test
 
-# Se aplican las transformaciones al conjunto de entrenamiento y de test 
-
+```{r}
 datos_train_prep <- bake(trained_recipe, new_data = datos_train)
 datos_test_prep <- bake(trained_recipe, new_data = datos_test)
 glimpse(datos_train_prep)
 
+```
 
 
 
@@ -149,7 +388,7 @@ glimpse(datos_train_prep)
 
 #K-Nearest Neighbor (kNN)
 
-# k: n鷐ero de observaciones vecinas empleadas.
+# k: n煤mero de observaciones vecinas empleadas.
 
 
 control_train <- trainControl(method = "repeatedcv",
@@ -173,7 +412,7 @@ modelo_knn
 
 ggplot(modelo_knn, highlight = TRUE) +
   scale_x_continuous(breaks = hiperparametros$k) +
-  labs(title = "Evoluci髇 del accuracy del modelo KNN", x = "K") + 
+  labs(title = "Evoluci贸n del accuracy del modelo KNN", x = "K") + 
   theme_bw()
 
 
@@ -181,12 +420,12 @@ ggplot(modelo_knn, highlight = TRUE) +
 
 
 # usekernel: TRUE para emplear un kernel que estime la densidad o 
-# FALSE para asumir una distribuci髇 de densidad gaussiana. 
+# FALSE para asumir una distribuci贸n de densidad gaussiana. 
 
-# fL: factor de correcci髇 de Laplace, 0 para no aplicar ninguna 
-# correcci髇. 
+# fL: factor de correcci贸n de Laplace, 0 para no aplicar ninguna 
+# correcci贸n. 
 
-# adjust: par醡etro pasado a la funci髇 density si usekernel = TRUE.
+# adjust: par谩metro pasado a la funci贸n density si usekernel = TRUE.
 
 
 
@@ -211,7 +450,7 @@ modelo_nb
 
 ggplot(modelo_nb, highlight = TRUE) +
   scale_x_continuous(breaks = hiperparametros$adjust) +
-  labs(title = "Evoluci髇 del accuracy del modelo Nb",
+  labs(title = "Evoluci贸n del accuracy del modelo Nb",
        x = "adjust") + 
   theme_bw()
 
@@ -219,7 +458,7 @@ ggplot(modelo_nb, highlight = TRUE) +
 
 
 
-# Regresi髇 log韘tica
+# Regresi贸n log铆stica
 
 
 
@@ -244,7 +483,7 @@ summary(modelo_logistic$finalModel)
 
 
 
-# 羠bol de clasificaci髇 simple
+# 脕rbol de clasificaci贸n simple
 
 
 control_train <- trainControl(method = "repeatedcv",
@@ -269,11 +508,11 @@ summary(modelo_C50Tree$finalModel)
 # RandomForest
 
 
-# mtry: n鷐ero predictores seleccionados aleatoriamente en cada 醨bol. 
-# min.node.size: tama駉 m韓imo que tiene que tener un nodo para poder 
+# mtry: n煤mero predictores seleccionados aleatoriamente en cada 谩rbol. 
+# min.node.size: tama帽o m铆nimo que tiene que tener un nodo para poder 
 # ser dividido. 
 
-#splitrule: criterio de divisi髇.
+#splitrule: criterio de divisi贸n.
 
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
@@ -300,7 +539,7 @@ modelo_rf$finalModel
 
 ggplot(modelo_rf, highlight = TRUE) +
   scale_x_continuous(breaks = 1:30) +
-  labs(title = "Evoluci髇 del accuracy del modelo Random Forest") +
+  labs(title = "Evoluci贸n del accuracy del modelo Random Forest") +
   guides(color = guide_legend(title = "mtry"), 
          shape = guide_legend(title = "mtry")) +
   theme_bw()
@@ -313,29 +552,29 @@ ggplot(modelo_rf, highlight = TRUE) +
 # Gradient Boosting
 
 
-#n.trees: n鷐ero de iteraciones del algoritmo de boosting, es decir, 
-# n鷐ero de modelos que forman el ensemble. Cuanto mayor es este valor, 
-# m醩 se reduce el error de entrenamiento, pudiendo llegar generarse 
+#n.trees: n煤mero de iteraciones del algoritmo de boosting, es decir, 
+# n煤mero de modelos que forman el ensemble. Cuanto mayor es este valor, 
+# m谩s se reduce el error de entrenamiento, pudiendo llegar generarse 
 #overfitting.
 
 
-# interaction.depth: complejidad de los 醨boles empleados como weak 
-# learner, en concreto, el n鷐ero total de divisiones que tiene el 醨bol.
-#Emplear 醨boles con ente 1 y 6 nodos suele dar buenos resultados.
+# interaction.depth: complejidad de los 谩rboles empleados como weak 
+# learner, en concreto, el n煤mero total de divisiones que tiene el 谩rbol.
+#Emplear 谩rboles con ente 1 y 6 nodos suele dar buenos resultados.
 
 
-#shrinkage: este par醡etro, tambi閚 conocido como learning rate, 
+#shrinkage: este par谩metro, tambi茅n conocido como learning rate, 
 # controla la influencia que tiene cada modelo sobre el conjunto 
 #del ensemble.
 
 
-# n.minobsinnode: n鷐ero m韓imo de observaciones que debe tener un 
+# n.minobsinnode: n煤mero m铆nimo de observaciones que debe tener un 
 # nodo para poder ser dividido. Al igual que interaction.depth, 
-# permite controlar la complejidad de los weak learners basados en 醨boles.
+# permite controlar la complejidad de los weak learners basados en 谩rboles.
 
 
 
-# Hiperpar醡etros 
+# Hiperpar谩metros 
 
 hiperparametros <- expand.grid(interaction.depth = c(1, 2), 
                                n.trees = c(50, 100, 200), 
@@ -356,14 +595,14 @@ modelo_boost <- train(Target ~ .,
                       tuneGrid = hiperparametros, 
                       metric = "Accuracy",
                       trControl = control_train,
-                      # N鷐ero de 醨boles ajustados distribution = "adaboost",
+                      # N煤mero de 谩rboles ajustados distribution = "adaboost",
                       verbose = FALSE) 
 modelo_boost
 
 
 
 ggplot(modelo_boost, highlight = TRUE) +
-  labs(title = "Evoluci髇 del accuracy del modelo Gradient Boosting") +
+  labs(title = "Evoluci贸n del accuracy del modelo Gradient Boosting") +
   guides(color = guide_legend(title = "shrinkage"),
          shape = guide_legend(title = "shrinkage")) +
   theme_bw() + 
@@ -374,13 +613,13 @@ ggplot(modelo_boost, highlight = TRUE) +
 
 
 # sigma: coeficiente del kernel radial. 
-#C: penalizaci髇 por violaciones del margen del hiperplano.
+#C: penalizaci贸n por violaciones del margen del hiperplano.
 
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
                               repeats = 5)
 
-# Hiperpar醡etros 
+# Hiperpar谩metros 
 
 hiperparametros <- expand.grid(sigma = c(0.001, 0.01, 0.1, 0.5, 1),
                                C = c(1 , 20, 50, 100, 200, 500, 700))
@@ -399,7 +638,7 @@ modelo_svmrad
 
 
 ggplot(modelo_svmrad, highlight = TRUE) +
-  labs(title = "Evoluci髇 del accuracy del modelo SVM Radial") +
+  labs(title = "Evoluci贸n del accuracy del modelo SVM Radial") +
   theme_bw()
 
 
@@ -408,11 +647,11 @@ ggplot(modelo_svmrad, highlight = TRUE) +
 # Redes neuronales (NNET)
 
 
-#size: n鷐ero de neuronas en la capa oculta. 
-#decay: controla la regularizaci髇 durante el entrenamiento de la red.
+#size: n煤mero de neuronas en la capa oculta. 
+#decay: controla la regularizaci贸n durante el entrenamiento de la red.
 
 
-# Hiperpar醡etros 
+# Hiperpar谩metros 
 
 
 control_train <- trainControl(method = "repeatedcv",
@@ -432,22 +671,22 @@ modelo_nnet <- train(Target~ ., data = datos_train_prep,
                      tuneGrid = hiperparametros,
                      metric = "Accuracy",
                      trControl = control_train,
-                     # Rango de inicializaci髇 de los pesos 
+                     # Rango de inicializaci贸n de los pesos 
                      rang = c(-0.7, 0.7),
-                     # Se aumenta el n鷐ero m醲imo de pesos 
+                     # Se aumenta el n煤mero m谩ximo de pesos 
                      MaxNWts = 2000, 
-                     # Para que no se muestre cada iteraci髇 por pantalla 
+                     # Para que no se muestre cada iteraci贸n por pantalla 
                      trace = FALSE) 
 
 modelo_nnet
 
 
 ggplot(modelo_nnet, highlight = TRUE) + 
-  labs(title = "Evoluci髇 del accuracy del modelo NNET") + theme_bw()
+  labs(title = "Evoluci贸n del accuracy del modelo NNET") + theme_bw()
 
 
 
-## Comparaci髇 de modelos
+## Comparaci贸n de modelos
 
 
 modelos <- list(KNN = modelo_knn,
@@ -490,7 +729,7 @@ metricas_resamples %>%
   geom_text(color = "white", size = 2.5) + 
   scale_y_continuous(limits = c(0, 1)) +
   # Accuracy basal geom_hline(yintercept = 0.62, linetype = "dashed") + 
-  labs(title = "Validaci髇: Accuracy medio repeated-CV",
+  labs(title = "Validaci贸n: Accuracy medio repeated-CV",
        subtitle = "Modelos ordenados por media", x = "Modelo") +
   coord_flip() + theme_bw()
 
