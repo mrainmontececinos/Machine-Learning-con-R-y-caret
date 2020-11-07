@@ -392,7 +392,7 @@ glimpse(datos_train_prep)
 
   
 # 5 Modelos 
-  ## K-Nearest Neighbor (kNN)
+  ## 5.1 K-Nearest Neighbor (kNN)
   
   
 ```{r}
