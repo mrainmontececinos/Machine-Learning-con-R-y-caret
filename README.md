@@ -2,6 +2,7 @@
 
 Tabla de contenidos
 # 1. Introducción
+Durante los últimos años, el interés y la aplicación de machine learning ha experimentado tal expansión, que se ha convertido en una disciplina aplicada en prácticamente todos los ámbitos de investigación académica e industrial. El creciente número de personas dedicadas a esta disciplina ha dado como resultado todo un repertorio de herramientas con las que, perfiles con especialización media, consiguen acceder a métodos predictivos potentes. El lenguaje de programación R es un ejemplo de ello.
 
 # 2 Análisis exploratorio de los datos 
   ## Distribución de variables respuesta 
