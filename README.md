@@ -660,7 +660,7 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
 ```
 
-  ## 5.7 5.8 SVM 
+  ## 5.7 SVM 
   
 ```{r}
 set.seed(342)
