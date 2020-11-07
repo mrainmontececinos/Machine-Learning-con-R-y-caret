@@ -4,15 +4,6 @@ data <- read.delim("F:/data.txt", header=T,encoding = 'UTF-8')
 data$Target=factor(data$Target, levels = c(0,1),
                    labels = c("No","Si"))
 
-
-set.seed(345)
-data2= sample(1:nrow(data),size=2000,replace=FALSE)
-
-data<- data[data2, ]
-
-
-
-
 library(caret)
 library(tidyverse)
 glimpse(data)
