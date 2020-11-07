@@ -333,7 +333,7 @@ objeto_recipe
   
   
   
-  ## Variables con varianza próxima a cero
+  ## 4.1 Variables con varianza próxima a cero
   No se deben incluir en el modelo predictores que contengan un único valor (cero-varianza) ya que no aportan información. Tampoco es conveniente incluir predictores que tengan   una varianza próxima a cero, es decir, predictores que toman solo unos pocos valores, de los cuales, algunos aparecen con muy poca frecuencia.
   
   ```{r}
@@ -342,7 +342,7 @@ data %>% select(Ciudad,Estado_civil,Edad,Contrato,Nivel_Academico) %>%
 ```
   
   
-  ## Estandarización y escalado 
+  ## 4.2 Estandarización y escalado 
   Cuando los predictores son numéricos, la escala en la que se miden, así como la magnitud de su varianza pueden influir en gran medida en el modelo. Muchos algoritmos de 
   machine learning (SVM, redes neuronales, lasso…) son sensibles a esto, de forma que, si no se igualan de alguna forma los predictores, aquellos que se midan en una escala 
   mayor o que tengan más varianza, dominarán el modelo aunque no sean los que más relación tienen con la variable respuesta. Existen principalmente 2 estrategias para evitarlo:
@@ -353,7 +353,7 @@ data %>% select(Ciudad,Estado_civil,Edad,Contrato,Nivel_Academico) %>%
 
   Normalización (estandarización): consiste en transformar los datos de forma que todos los predictores estén aproximadamente en la misma escala. Hay dos formas de lograrlo.
   
-  ## Binarización de variables cualitativas y numerica
+  ## 4.3 Binarización de variables cualitativas y numerica
   
   
 ```{r}
