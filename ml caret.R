@@ -390,7 +390,7 @@ glimpse(datos_train_prep)
 
 # k: número de observaciones vecinas empleadas.
 
-
+set.seed(342)
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
                               repeats = 5)
@@ -428,8 +428,7 @@ ggplot(modelo_knn, highlight = TRUE) +
 # adjust: parámetro pasado a la función density si usekernel = TRUE.
 
 
-
-
+set.seed(342)
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
                               repeats = 5) 
@@ -462,7 +461,7 @@ ggplot(modelo_nb, highlight = TRUE) +
 
 
 
-
+set.seed(342)
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
                               repeats = 5)
@@ -485,7 +484,7 @@ summary(modelo_logistic$finalModel)
 
 # Árbol de clasificación simple
 
-
+set.seed(342)
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
                               repeats = 5)
@@ -513,7 +512,7 @@ summary(modelo_C50Tree$finalModel)
 # ser dividido. 
 
 #splitrule: criterio de división.
-
+set.seed(342)
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
                               repeats = 5)
@@ -576,16 +575,18 @@ ggplot(modelo_rf, highlight = TRUE) +
 
 # Hiperparámetros 
 
+set.seed(342)
+
+control_train <- trainControl(method = "repeatedcv",
+                              number = 10, 
+                              repeats = 5)
+
 hiperparametros <- expand.grid(interaction.depth = c(1, 2), 
                                n.trees = c(50, 100, 200), 
                                shrinkage = c(0.001, 0.01, 0.1), 
                                n.minobsinnode = c(2, 5, 15))
 
 
-
-control_train <- trainControl(method = "repeatedcv",
-                              number = 10, 
-                              repeats = 5)
 
 set.seed(342)
 
@@ -614,7 +615,7 @@ ggplot(modelo_boost, highlight = TRUE) +
 
 # sigma: coeficiente del kernel radial. 
 #C: penalización por violaciones del margen del hiperplano.
-
+set.seed(342)
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
                               repeats = 5)
@@ -653,7 +654,7 @@ ggplot(modelo_svmrad, highlight = TRUE) +
 
 # Hiperparámetros 
 
-
+set.seed(342)
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
                               repeats = 5)
