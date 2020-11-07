@@ -37,7 +37,7 @@ data$Cta._Ahorro_.Ent.=as.factor(data$Cta._Ahorro_.Ent.)
 # 2 Análisis exploratorio de los datos 
 Antes de entrenar un modelo predictivo, o incluso antes de realizar cualquier cálculo con un nuevo conjunto de datos, es muy importante realizar una exploración descriptiva de los mismos. Este proceso permite entender mejor que información contiene cada variable, así como detectar posibles errores.
 
-  ## Distribución de variables respuesta 
+  ## 2.1 Distribución de variables respuesta 
   Cuando se crea un modelo, es muy importante estudiar la distribución de la variable respuesta, ya que, a fin de cuentas, es lo que nos interesa predecir.
   
   ```{r}
@@ -57,12 +57,12 @@ n_observaciones <- nrow(data)
 predicciones <- rep(x = "No", n_observaciones)
 mean(predicciones == data$Target) * 100
 
-
+```
   
   
-  ## Distribución de variables continuas y cualitativas 
-  Como el objetivo del estudio es predecir Target si y no, el análisis de cada variable se hace en relación a la variable respuesta Target.          
-  Analizando los datos de esta forma, se pueden empezar a extraer ideas sobre qué variables están más relacionadas con la Target.
+ ## 2.2 Distribución de variables continuas y cualitativas 
+ Como el objetivo del estudio es predecir Target si y no, el análisis de cada variable se hace en relación a la variable respuesta Target.          
+ Analizando los datos de esta forma, se pueden empezar a extraer ideas sobre qué variables están más relacionadas con la Target.
   
   
   
@@ -103,7 +103,7 @@ data %>% group_by(Target) %>%
 ```
 
 
-### Distribución de variables cualitativas
+## 2.3 Distribución de variables cualitativas
 
 
 ```{r}
@@ -438,7 +438,7 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
 ```
 
-  ## Naive Bayes 
+  ## 5.2 Naive Bayes 
   
   
 
@@ -483,7 +483,7 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
 ```
   
-  ## Regresión logística 
+  ## 5.3 Regresión logística 
   
   
 ```{r}
@@ -523,7 +523,7 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
 ```
 
-  ## Árbol de clasificación simple 
+  ## 5.4 Árbol de clasificación simple 
   
 ```{r}
 set.seed(342)
@@ -560,7 +560,7 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
 ```
 
-  ## RandomForest 
+  ## 5.5 RandomForest 
   
 ```{r}
 set.seed(342)
@@ -608,7 +608,7 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 ```
 
   
-  ## Gradient Boosting
+  ## 5.6 Gradient Boosting
   
 
 ```{r}
@@ -660,7 +660,7 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
 ```
 
-  ## SVM 
+  ## 5.7 5.8 SVM 
   
 ```{r}
 set.seed(342)
@@ -703,7 +703,7 @@ paste("El error de test del modelo:", round(error_test*100, 2), "%")
 
 ```
 
-  ## Redes neuronales (NNET) 
+  ## 5.9 Redes neuronales (NNET) 
   
 
 # Hiperparámetros 
