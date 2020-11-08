@@ -16,7 +16,6 @@ set.seed(345)
 library(caret)
 library(tidyverse)
 
-data$Target=as.factor(data$Target)
 data$Ciudad=as.factor(data$Ciudad)
 data$Estrato=as.factor(data$Estrato)
 data$Canal=as.factor(data$Canal)
