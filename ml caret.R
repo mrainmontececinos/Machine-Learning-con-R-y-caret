@@ -3,7 +3,7 @@
 data <- read.delim("F:/sergio/taller 3/data.txt", header=T,encoding = 'UTF-8')
 
 set.seed(345)
-data2= sample(1:nrow(data),size=200,replace=FALSE)
+data2= sample(1:nrow(data),size=2000,replace=FALSE)
 
 data<- data[data2, ]
 
@@ -19,7 +19,7 @@ data$Target=factor(data$Target, levels = c(0,1),
 data$Ciudad=as.factor(data$Ciudad)
 data$Estrato=as.factor(data$Estrato)
 data$Canal=as.factor(data$Canal)
-data$Campa馻=as.factor(data$Campa馻)
+data$Campa帽a=as.factor(data$Campa帽a)
 data$Nivel_Academico=as.factor(data$Nivel_Academico)
 data$Motivo_Retiro=as.factor(data$Motivo_Retiro)
 data$Franquicia=as.factor(data$Franquicia)
@@ -32,7 +32,7 @@ data$Estado_civil=as.factor(data$Estado_civil)
 data$Cta._Ahorro_.Ent.=as.factor(data$Cta._Ahorro_.Ent.)
 
 
-# N鷐ero de datos ausentes por variable
+# N煤mero de datos ausentes por variable
 map_dbl(data, .f = function(x){sum(is.na(x))})
 
 
@@ -67,7 +67,7 @@ mean(predicciones == data$Target) * 100
 library(randomForest) 
 
 datos_rf <- data %>% select(-Tipo_documento, -ID, -Fecha_de_Corte, 
-                            -Fecha_nacimiento, -Fecha_activaci髇,-Corte_AAAAMM,-Motivo_Retiro)
+                            -Fecha_nacimiento, -Fecha_activaci贸n,-Corte_AAAAMM,-Motivo_Retiro)
 
 
 
@@ -86,13 +86,13 @@ p1 <- ggplot(data = importancia,
              aes(x = reorder(variable, MeanDecreaseAccuracy),
                  y = MeanDecreaseAccuracy, 
                  fill = MeanDecreaseAccuracy)) +
-  labs(x = "variable", title = "Reducci髇 de Accuracy") +
+  labs(x = "variable", title = "Reducci贸n de Accuracy") +
   geom_col() + coord_flip() + theme_bw() +theme(legend.position = "bottom") 
 
 p2 <- ggplot(data = importancia,
              aes(x = reorder(variable, MeanDecreaseGini), 
                  y = MeanDecreaseGini, fill = MeanDecreaseGini)) + 
-  labs(x = "variable", title = "Reducci髇 de pureza (Gini)") +
+  labs(x = "variable", title = "Reducci贸n de pureza (Gini)") +
   geom_col() + coord_flip() + theme_bw() + 
   theme(legend.position = "bottom") 
 library("ggpubr")
@@ -102,7 +102,7 @@ ggarrange(p1, p2)
 
 
 set.seed(123)
-# Se crean los 韓dices de las observaciones de entrenamiento 
+# Se crean los 铆ndices de las observaciones de entrenamiento 
 
 train <- createDataPartition(y = data$Target, 
                              p = 0.7, list = FALSE, times = 1)
@@ -153,7 +153,7 @@ glimpse(datos_train_prep)
 
 #K-Nearest Neighbor (kNN)
 
-# k: n鷐ero de observaciones vecinas empleadas.
+# k: n煤mero de observaciones vecinas empleadas.
 
 
 control_train <- trainControl(method = "repeatedcv",
@@ -177,7 +177,7 @@ modelo_knn
 
 ggplot(modelo_knn, highlight = TRUE) +
   scale_x_continuous(breaks = hiperparametros$k) +
-  labs(title = "Evoluci髇 del accuracy del modelo KNN", x = "K") + 
+  labs(title = "Evoluci贸n del accuracy del modelo KNN", x = "K") + 
   theme_bw()
 
 
@@ -185,12 +185,12 @@ ggplot(modelo_knn, highlight = TRUE) +
 
 
 # usekernel: TRUE para emplear un kernel que estime la densidad o 
-# FALSE para asumir una distribuci髇 de densidad gaussiana. 
+# FALSE para asumir una distribuci贸n de densidad gaussiana. 
 
-# fL: factor de correcci髇 de Laplace, 0 para no aplicar ninguna 
-# correcci髇. 
+# fL: factor de correcci贸n de Laplace, 0 para no aplicar ninguna 
+# correcci贸n. 
 
-# adjust: par醡etro pasado a la funci髇 density si usekernel = TRUE.
+# adjust: par谩metro pasado a la funci贸n density si usekernel = TRUE.
 
 
 
@@ -215,7 +215,7 @@ modelo_nb
 
 ggplot(modelo_nb, highlight = TRUE) +
   scale_x_continuous(breaks = hiperparametros$adjust) +
-  labs(title = "Evoluci髇 del accuracy del modelo Nb",
+  labs(title = "Evoluci贸n del accuracy del modelo Nb",
        x = "adjust") + 
   theme_bw()
 
@@ -223,7 +223,7 @@ ggplot(modelo_nb, highlight = TRUE) +
 
 
 
-# Regresi髇 log韘tica
+# Regresi贸n log铆stica
 
 
 
@@ -248,7 +248,7 @@ summary(modelo_logistic$finalModel)
 
 
 
-# 羠bol de clasificaci髇 simple
+# 脕rbol de clasificaci贸n simple
 
 
 set.seed(342)
@@ -272,11 +272,11 @@ summary(modelo_C50Tree$finalModel)
 # RandomForest
 
 
-# mtry: n鷐ero predictores seleccionados aleatoriamente en cada 醨bol. 
-# min.node.size: tama駉 m韓imo que tiene que tener un nodo para poder 
+# mtry: n煤mero predictores seleccionados aleatoriamente en cada 谩rbol. 
+# min.node.size: tama帽o m铆nimo que tiene que tener un nodo para poder 
 # ser dividido. 
 
-#splitrule: criterio de divisi髇.
+#splitrule: criterio de divisi贸n.
 
 set.seed(342)
 
@@ -304,7 +304,7 @@ modelo_rf
 
 ggplot(modelo_rf, highlight = TRUE) +
   scale_x_continuous(breaks = 1:30) +
-  labs(title = "Evoluci髇 del accuracy del modelo Random Forest") +
+  labs(title = "Evoluci贸n del accuracy del modelo Random Forest") +
   guides(color = guide_legend(title = "mtry"), 
          shape = guide_legend(title = "mtry")) +
   theme_bw()
@@ -317,29 +317,29 @@ ggplot(modelo_rf, highlight = TRUE) +
 # Gradient Boosting
 
 
-#n.trees: n鷐ero de iteraciones del algoritmo de boosting, es decir, 
-# n鷐ero de modelos que forman el ensemble. Cuanto mayor es este valor, 
-# m醩 se reduce el error de entrenamiento, pudiendo llegar generarse 
+#n.trees: n煤mero de iteraciones del algoritmo de boosting, es decir, 
+# n煤mero de modelos que forman el ensemble. Cuanto mayor es este valor, 
+# m谩s se reduce el error de entrenamiento, pudiendo llegar generarse 
 #overfitting.
 
 
-# interaction.depth: complejidad de los 醨boles empleados como weak 
-# learner, en concreto, el n鷐ero total de divisiones que tiene el 醨bol.
-#Emplear 醨boles con ente 1 y 6 nodos suele dar buenos resultados.
+# interaction.depth: complejidad de los 谩rboles empleados como weak 
+# learner, en concreto, el n煤mero total de divisiones que tiene el 谩rbol.
+#Emplear 谩rboles con ente 1 y 6 nodos suele dar buenos resultados.
 
 
-#shrinkage: este par醡etro, tambi閚 conocido como learning rate, 
+#shrinkage: este par谩metro, tambi茅n conocido como learning rate, 
 # controla la influencia que tiene cada modelo sobre el conjunto 
 #del ensemble.
 
 
-# n.minobsinnode: n鷐ero m韓imo de observaciones que debe tener un 
+# n.minobsinnode: n煤mero m铆nimo de observaciones que debe tener un 
 # nodo para poder ser dividido. Al igual que interaction.depth, 
-# permite controlar la complejidad de los weak learners basados en 醨boles.
+# permite controlar la complejidad de los weak learners basados en 谩rboles.
 
 
 
-# Hiperpar醡etros 
+# Hiperpar谩metros 
 
 set.seed(342)
 
@@ -364,14 +364,14 @@ modelo_boost <- train(Target ~ .,
                       tuneGrid = hiperparametros, 
                       metric = "Accuracy",
                       trControl = control_train,
-                      # N鷐ero de 醨boles ajustados distribution = "adaboost",
+                      # N煤mero de 谩rboles ajustados distribution = "adaboost",
                       verbose = FALSE) 
 modelo_boost
 
 
 
 ggplot(modelo_boost, highlight = TRUE) +
-  labs(title = "Evoluci髇 del accuracy del modelo Gradient Boosting") +
+  labs(title = "Evoluci贸n del accuracy del modelo Gradient Boosting") +
   guides(color = guide_legend(title = "shrinkage"),
          shape = guide_legend(title = "shrinkage")) +
   theme_bw() + 
@@ -382,14 +382,14 @@ ggplot(modelo_boost, highlight = TRUE) +
 
 
 # sigma: coeficiente del kernel radial. 
-#C: penalizaci髇 por violaciones del margen del hiperplano.
+#C: penalizaci贸n por violaciones del margen del hiperplano.
 
 set.seed(342)
 control_train <- trainControl(method = "repeatedcv",
                               number = 10, 
                               repeats = 5)
 
-# Hiperpar醡etros 
+# Hiperpar谩metros 
 
 hiperparametros <- expand.grid(sigma = c(0.001, 0.01, 0.1, 0.5, 1),
                                C = c(1 , 20, 50, 100, 200, 500, 700))
@@ -408,7 +408,7 @@ modelo_svmrad
 
 
 ggplot(modelo_svmrad, highlight = TRUE) +
-  labs(title = "Evoluci髇 del accuracy del modelo SVM Radial") +
+  labs(title = "Evoluci贸n del accuracy del modelo SVM Radial") +
   theme_bw()
 
 
@@ -417,11 +417,11 @@ ggplot(modelo_svmrad, highlight = TRUE) +
 # Redes neuronales (NNET)
 
 
-#size: n鷐ero de neuronas en la capa oculta. 
-#decay: controla la regularizaci髇 durante el entrenamiento de la red.
+#size: n煤mero de neuronas en la capa oculta. 
+#decay: controla la regularizaci贸n durante el entrenamiento de la red.
 
 
-# Hiperpar醡etros 
+# Hiperpar谩metros 
 
 set.seed(342)
 
@@ -442,20 +442,20 @@ modelo_nnet <- train(Target~ ., data = datos_train_prep,
                      tuneGrid = hiperparametros,
                      metric = "Accuracy",
                      trControl = control_train,
-                     # Se aumenta el n鷐ero m醲imo de pesos 
+                     # Se aumenta el n煤mero m谩ximo de pesos 
                      MaxNWts = 2000, 
-                     # Para que no se muestre cada iteraci髇 por pantalla 
+                     # Para que no se muestre cada iteraci贸n por pantalla 
                      trace = FALSE) 
 
 modelo_nnet
 
 
 ggplot(modelo_nnet, highlight = TRUE) + 
-  labs(title = "Evoluci髇 del accuracy del modelo NNET") + theme_bw()
+  labs(title = "Evoluci贸n del accuracy del modelo NNET") + theme_bw()
 
 
 
-## Comparaci髇 de modelos
+## Comparaci贸n de modelos
 
 
 modelos <- list(KNN = modelo_knn,
@@ -498,7 +498,7 @@ metricas_resamples %>%
   geom_text(color = "white", size = 2.5) + 
   scale_y_continuous(limits = c(0, 1)) +
   # Accuracy basal geom_hline(yintercept = 0.62, linetype = "dashed") + 
-  labs(title = "Validaci髇: Accuracy medio repeated-CV",
+  labs(title = "Validaci贸n: Accuracy medio repeated-CV",
        subtitle = "Modelos ordenados por media", x = "Modelo") +
   coord_flip() + theme_bw()
 
