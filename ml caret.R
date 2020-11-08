@@ -2,12 +2,6 @@
 
 data <- read.delim("F:/sergio/taller 3/data.txt", header=T,encoding = 'UTF-8')
 
-set.seed(345)
-data2= sample(1:nrow(data),size=2000,replace=FALSE)
-
-data<- data[data2, ]
-
-
 library(caret)
 library(tidyverse)
 
@@ -257,7 +251,7 @@ control_train <- trainControl(method = "repeatedcv",
                               repeats = 5)
 
 
-
+library(C5.0Tree)
 set.seed(342)
 modelo_C50Tree <- train(Target ~ ., data = datos_train_prep,
                         method = "C5.0Tree",
@@ -289,7 +283,7 @@ hiperparametros <- expand.grid(mtry = c(3, 4, 5, 7),
                                splitrule = "gini")
 
 
-
+library(ranger)
 set.seed(342)
 modelo_rf <- train(Target~ .,
                    data = datos_train_prep,
@@ -358,7 +352,7 @@ hiperparametros <- expand.grid(interaction.depth = c(1, 2),
 
 set.seed(342)
 
-
+library(gbm)
 modelo_boost <- train(Target ~ ., 
                       data = datos_train_prep, method = "gbm",
                       tuneGrid = hiperparametros, 
@@ -434,7 +428,7 @@ hiperparametros <- expand.grid(size = c(10, 20, 50, 80, 100),
                                decay = c(0.0001, 0.1, 0.5))
 
 
-
+library(nnet)
 
 set.seed(342) 
 modelo_nnet <- train(Target~ ., data = datos_train_prep, 
